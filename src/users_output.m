@@ -31,10 +31,10 @@ elseif parameter.Scaling==2 %Nusselt scaling
     ScaleT=parameter.Shkadov_kappa;
     ScaleU = 1;
 elseif parameter.Scaling==3 %Shkadov scaling
-    % ScaleX = 2*pi()/parameter.Shkadov_k0x;
-    % ScaleZ = 2*pi()/parameter.Shkadov_k0z;
-    ScaleX = 1;
-    ScaleZ = 1;
+    ScaleX = 2*pi()/parameter.Shkadov_k0x;
+    ScaleZ = 2*pi()/parameter.Shkadov_k0z;
+    % ScaleX = 1;
+    % ScaleZ = 1;
     ScaleH = 1;
     % ScaleQ = parameter.Shkadov_delta/parameter.Reynolds;
     ScaleQ = 1;
