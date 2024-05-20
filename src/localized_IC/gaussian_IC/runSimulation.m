@@ -154,7 +154,7 @@ format long
                 clear temp
                 ttime = T(end);
                 U = U(end,:);
-                [storeData] = users_output(handles,parameter,U,M1,M2,N1,N2,NN2,h0,storeData,kx,kz,ttime);
+                [storeData] = users_output(handles,parameter,U,M1,M2,N1,N2,NN2,h0,storeData,kx,kz,ttime,Lx,Lz);
         tout=ttime;        
         if handles.New_LstBxValue == 1
            tout=tout/hnDach*(tv*lv*parameter.Shkadov_kappa);
