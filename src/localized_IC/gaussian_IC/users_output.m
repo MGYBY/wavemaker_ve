@@ -1,4 +1,4 @@
-function [storeData] = users_output(handles,parameter,U,M1,M2,N1,N2,NN2,h0,storeData,kx,kz,ttime)
+function [storeData] = users_output(handles,parameter,U,M1,M2,N1,N2,NN2,h0,storeData,kx,kz,ttime,Lx,Lz)
 %make all the output for the user
 %Extracting Data from U Vector
 sizeU=size(U(end,:));
