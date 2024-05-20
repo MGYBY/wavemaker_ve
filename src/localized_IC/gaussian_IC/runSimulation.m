@@ -124,7 +124,7 @@ format long
         storeData.q = [];
 
         % output of IC, for general checking 
-        [storeData] = users_output(handles,parameter,U,M1,M2,N1,N2,NN2,h0,storeData,kx,kz,ttime);
+        [storeData] = users_output(handles,parameter,U,M1,M2,N1,N2,NN2,h0,storeData,kx,kz,ttime,Lx,Lz);
 
         while(tmax-ttime>prtstep && get(hObjectToggle,'Value')==1)
             
