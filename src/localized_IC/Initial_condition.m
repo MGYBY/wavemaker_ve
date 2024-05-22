@@ -22,6 +22,7 @@ end
                 datah(m,n)=h0*(1+Ax*sin(2.0*pi*(x-Lx/nwx/2.0)/(Lx/nwx))+Bx*cos(nwx*k0x*x)+Az*sin(nwz*k0z*z)+Bz*cos(nwz*k0z*z)+stNoise*rand(1))+randz(n);
                 datap(m,n)=0;
                 dataq(m,n)=datah(m,n).^3/3;
+                % dataq(m,n)=(((3.*datah(m,n).^2)/2-datah(m,n)^3./2)./datah(m,n)).*datah(m,n)
             else
                 datah(m,n)=h0*1.0;
                 datap(m,n)=0;
