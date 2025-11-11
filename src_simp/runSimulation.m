@@ -31,17 +31,31 @@ clc; clear;
 
 format long
         %%%%%%%%%% The three parameters defining the problem %%%%%%%%%%
-        So = 1.0;
-        Fr = 1.290994;
-        we = 20;
-        mparam = 0.20;
+        So = 0.08;
+        Fr = 0.70;
+        we = 0.000;
+        mparam = 0.50;
         % derived parameters here
         cot = 1.0/So;
         rey = 3.0*(Fr^2.0)/So;
 
+        Lx = 30.0;
+
+        %Accuracy of the simulation Fourier coefficients in streamwise and spanwiese direction
+        parameter.NNst = 10; % 2^(NNst+1)
+        parameter.NNsp = 0;
+        NN1=parameter.NNst;
+        NN2=parameter.NNsp;
+
+        %Read maximum time and print time step
+        % tmax = str2num(handles.TMax.String);
+        % prtstep = str2num(handles.PrtStep.String);
+        tmax = 60.0;
+        prtstep = 1.0;
+
         addpath(genpath('./'));
         warning('off');
-        parameter.Name = 'test_hu_case_res512';
+        parameter.Name = 'Fr0p7_L30_m0p5_noST_res2048_ODE23sSolver';
         mkdir(parameter.Name);
         warning('on');
         % save(['./' parameter.Name '/ParameterFile'],'parameter');
@@ -63,12 +77,6 @@ format long
         end
         GPU = false;
 
-        %Accuracy of the simulation Fourier coefficients in streamwise and spanwiese direction
-        parameter.NNst = 7;
-        parameter.NNsp = 0;
-        NN1=parameter.NNst;
-        NN2=parameter.NNsp;
-               
         %Read dimensionless parameters in Shkadov scaling
         parameter.Shkadov_delta = 1.0;
         parameter.Shkadov_zeta = 1.0;
@@ -76,20 +84,13 @@ format long
         delta = parameter.Shkadov_delta;
         zeta = parameter.Shkadov_zeta;
         eta = parameter.Shkadov_eta;
-        
-        Lx = 210.0;
+
         parameter.Shkadov_k0x = 2.0*pi/Lx;
         parameter.Shkadov_k0z = 0;
         parameter.h0 = 1.0;
         k0x = parameter.Shkadov_k0x;
         k0z = parameter.Shkadov_k0z;
         h0=parameter.h0;
-         
-        %Read maximum time and print time step
-        % tmax = str2num(handles.TMax.String);
-        % prtstep = str2num(handles.PrtStep.String);
-        tmax = 250.0;
-        prtstep = 0.2;
         
         %Determine viscous time scale tv and viscous length scale lv and Nusselt
         %film thickness hn
@@ -125,7 +126,7 @@ format long
         % if(NN1==0||NN2==0) dim=2; else dim=3; end
         dim = 2;
         
-        parameter.AlaisingRadius = 0.6666666667; 
+        parameter.AlaisingRadius = 2.0/3.0; 
         AlaisingRadius = parameter.AlaisingRadius;  %Radius for anti-alaising
         %Create Alaising filter and Initial conditions for CPU
         [kx,kz,k2cut]=CPU_AliasingFilter(AlaisingRadius,N1,N2,M1,M2,k0x,k0z);
@@ -179,6 +180,7 @@ format long
                         [T,U] = ode45(@(T,U)GPU_dUdt_SimplifiedModel(U,h0,M1,M2,N1,N2,kxGPU,kzGPU,delta,eta,zeta,k2cut,N,Conj,NoConj,GPU),T,U,options);
                     else
                         [T,U] = ode45(@(T,U)CPU_dUdt_SimplifiedModel(U,h0,M1,M2,N1,N2,kx,kz,delta,eta,zeta,k2cut,N,0,0,mparam,rey,cot,we),T,U,options);
+                        % [T,U] = ode113(@(T,U)CPU_dUdt_SimplifiedModel(U,h0,M1,M2,N1,N2,kx,kz,delta,eta,zeta,k2cut,N,0,0,mparam,rey,cot,we),T,U,options);
                     end
                 elseif parameter.Model == 2 %Start Full second-order model
                     if(GPU == true)
@@ -192,7 +194,7 @@ format long
                 ttime = T(end);
                 U = U(end,:);
                 % [storeData] = users_output(handles,parameter,U,M1,M2,N1,N2,NN2,h0,storeData,kx,kz,ttime);
-                [storeData] = save_csv(parameter,U,M1,M2,N1,N2,NN2,h0,storeData,kx,kz,ttime);
+                [storeData] = save_csv(parameter,U,M1,M2,N1,N2,NN2,h0,storeData,kx,kz,ttime,Lx);
         tout=ttime;        
         % if handles.New_LstBxValue == 1
         %    tout=tout/hnDach*(tv*lv*parameter.Shkadov_kappa);
@@ -206,6 +208,4 @@ format long
                 toc
             end
         end
-
-
     end
